@@ -218,4 +218,11 @@ For questions or feedback, feel free to reach out:
 - Deploy the API to platforms like Heroku, AWS, or Vercel for production use.
 
 ---
+---
+
+## 📘 Postman Documentation
+
+You can also explore and test the full API with Postman:
+
+👉 [Click here to open Postman Docs](https://documenter.getpostman.com/view/37930568/2sB2cd5JbS)
 
