@@ -7,18 +7,9 @@ function App() {
     <div className="App">
 
       <Router>
-
-   
-
-
           <Routes>
-
-            <Route path='/' element={<LandingPage />} />
-
-          
-          </Routes>
-        
-
+            <Route path='/' element={<LandingPage />} />       
+          </Routes>       
       </Router>
     </div>
   );
