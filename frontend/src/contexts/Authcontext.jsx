@@ -59,25 +59,32 @@ export const AuthProvider = ({ children }) => {
 
     const getHistoryOfUser = async () => {
         try {
-            let request = await client.get("/get_all_activity", {
-                params: {
-                    token: localStorage.getItem("token")
+            let request = await axios.get(
+                `${server}/api/meeting/get_all_activity`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
                 }
-            });
-            return request.data
-        } catch
-         (err) {
+            );
+            return request.data;
+        } catch (err) {
             throw err;
         }
-    }
+    };
 
     const addToUserHistory = async (meetingCode) => {
         try {
-            let request = await client.post("/add_to_activity", {
-                token: localStorage.getItem("token"),
-                meeting_code: meetingCode
-            });
-            return request
+            let request = await axios.post(
+                `${server}/api/meeting/add_to_activity`,
+                { meeting_code: meetingCode },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
+            );
+            return request;
         } catch (e) {
             throw e;
         }

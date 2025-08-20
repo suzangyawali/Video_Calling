@@ -6,6 +6,7 @@ import { AuthProvider } from './contexts/Authcontext.jsx';
 import Authentication from './pages/authentication';
 import HomeComponent from './pages/home';
 import LandingPage from './pages/landing';
+import History from './pages/history';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route path='/' element={<LandingPage />} />   
             <Route path='/auth' element={<Authentication />} />    
              <Route path='/home's element={<HomeComponent />} />
+              <Route path='/history' element={<History />} />
           </Routes>       
         </AuthProvider>
       </Router>
