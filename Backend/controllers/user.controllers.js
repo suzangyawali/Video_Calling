@@ -1,17 +1,23 @@
-import authService from '../services/auth.services.js'; 
 import { createAuthToken } from "../helper/auth.helper.js";
+import authService from '../services/auth.services.js';
    
-    const login= async (req,res)=>{
-     const data=req.body;
-         try{ 
-        const user= await authService.login(data);//database bata info jikerw JSON format ma dinxa valid vaye
-        const token=createAuthToken(user);//User Json bata token generate garne
-        res.cookie("AuthToken",token,{httpOnly:true});//only server access cookie
-        res.json({...user,token});
-        }catch(error){
-        res.status(500).send(error.message);
+    const login = async (req, res) => {
+        const data = req.body;
+        try { 
+            const user = await authService.login(data);
+            const token = createAuthToken(user);
+            res.cookie("AuthToken", token, { httpOnly: true });
+            res.json({ ...user, token });
+        } catch (error) {
+            if (
+                error.message === "Email or password doesn't match" ||
+                error.message === "Email or Password doesn't match"
+            ) {
+                return res.status(401).send(error.message);
+            }
+            res.status(500).send("Internal server error");
         }
-     }
+    }
     
      const register=async(req,res)=>{
         const data=req.body;
@@ -34,6 +40,6 @@ import { createAuthToken } from "../helper/auth.helper.js";
         }
         
      }
-     export  {register,login};
-     
+     export { login, register };
+
 

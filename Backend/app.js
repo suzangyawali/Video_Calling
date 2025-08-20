@@ -24,9 +24,17 @@ app.use(logger);
 app.use(cookieParser());//Cookie: username=JohnDoe; into req.cookies inform of JSON
 app.use(
     cors({
-      origin: process.env.APP_URL,//allow req from this domain only
+        origin: [
+            process.env.APP_URL,           // Production URL from .env
+            "http://localhost:5173",       // Vite dev server
+            "http://localhost:3000",       // Backend URL
+        ],
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization']
     })
 );
+
 
 const PORT= process.env.PORT;
 
