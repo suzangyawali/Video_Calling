@@ -36,7 +36,7 @@ app.use(
 );
 
 
-const PORT= process.env.PORT;
+const PORT= process.env.PORT|| 3000;
 
 app.get("/",(req,res)=>{
     res.json({
@@ -47,6 +47,7 @@ app.get("/",(req,res)=>{
 app.use("/api/user",user);
 app.use("/api/meeting",meeting);
 
-app.listen(PORT,()=>{
+
+server.listen(PORT, () => {
     console.log(`Server running at ${PORT}`);
-})
+});

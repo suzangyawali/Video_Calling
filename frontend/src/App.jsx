@@ -5,6 +5,7 @@ import './App.css';
 import { AuthProvider } from './contexts/Authcontext.jsx';
 import Authentication from './pages/authentication';
 import HomeComponent from './pages/home';
+import VideoMeetComponent from './pages/videoMeet';
 import LandingPage from './pages/landing';
 import History from './pages/history';
 
@@ -19,6 +20,7 @@ function App() {
             <Route path='/auth' element={<Authentication />} />    
              <Route path='/home's element={<HomeComponent />} />
               <Route path='/history' element={<History />} />
+               <Route path='/:url' element={<VideoMeetComponent />} />
           </Routes>       
         </AuthProvider>
       </Router>

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../contexts/Authcontext.jsx';
-
+import Img from '../assets/wallpaper.jpg';
 export default function Authentication() {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
@@ -84,18 +84,18 @@ export default function Authentication() {
     }, [open]);
 
     return (
-        <div className="min-h-screen flex bg-gray-50">
+        <div className="fixed inset-0 flex bg-[#b1b4d7] overflow-hidden  ">
             {/* Left side - Background Image */}
             <div 
-                className="hidden sm:flex sm:w-1/3 md:w-3/5 bg-cover bg-center bg-no-repeat"
+                className="hidden  sm:flex sm:w-1/3 md:w-3/5 bg-cover bg-center bg-no-repeat"
                 style={{
-                    backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
+                    backgroundImage: 'url("https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80")',
                 }}
             />
             
             {/* Right side - Authentication Form */}
-            <div className="w-full sm:w-2/3 md:w-2/5 flex items-center justify-center p-8 bg-white shadow-2xl">
-                <div className="w-full max-w-md space-y-8">
+            <div className="w-full sm:w-2/3 md:w-2/5 flex items-center justify-center p-8 bg-[#fffafc] shadow-2xl">
+                <div className="w-full max-w-md space-y-5">
                     {/* Avatar and Header */}
                     <div className="flex flex-col items-center">
                         <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center mb-6">
