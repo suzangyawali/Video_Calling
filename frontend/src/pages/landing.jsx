@@ -46,7 +46,7 @@ export default function LandingPage() {
           <div className="flex justify-between items-center p-6 max-w-7xl mx-auto">
             <div className="group">
               <h2 className="text-3xl font-bold bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 bg-clip-text text-transparent hover:scale-105 transition-transform cursor-pointer">
-                Apna Video Call
+               HelioMeet
               </h2>
             </div>
             <div className="flex space-x-8">
