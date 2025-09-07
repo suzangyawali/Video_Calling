@@ -76,28 +76,6 @@ HelioMeet uses WebRTC mesh architecture optimized for small groups of up to 6 pa
 
 ---
 
-## Backend & API Documentation
-
-### Overview
-The backend service handles user registration, authentication, meeting history management, and real-time communication via Socket.io. It uses **JWT** for secure authentication.
-
-### Base URL
-
-http://localhost:3000
-
-### Authentication
-
-Include your JWT in the `Authorization` header for all protected endpoints:
-
-```http
-Authorization: Bearer <token>
-```
-
-**Example:**
-
-```http
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-```
 
   ## Backend & API Documentation
 
