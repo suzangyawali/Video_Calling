@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../contexts/Authcontext.jsx';
-import Img from '../assets/wallpaper.jpg';
 export default function Authentication() {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
@@ -96,6 +95,22 @@ export default function Authentication() {
             {/* Right side - Authentication Form */}
             <div className="w-full sm:w-2/3 md:w-2/5 flex items-center justify-center p-8 bg-[#fffafc] shadow-2xl">
                 <div className="w-full max-w-md space-y-5">
+                    {/* Test Login Info */}
+                    {formState === 0 && (
+                        <div className="mb-4 flex justify-end">
+                                <button
+                                    type="button"
+                                    className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-semibold shadow transition"
+                                    onClick={() => {
+                                        setEmail('ram@gmail.com');
+                                        setPassword('123456');
+                                    }}
+                                    disabled={isLoading}
+                                >
+                                    Test Login
+                                </button>
+                        </div>
+                    )}
                     {/* Avatar and Header */}
                     <div className="flex flex-col items-center">
                         <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center mb-6">

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import io from "socket.io-client";
+import Modal from '../components/Modal';
 import server from '../environment';
 
 var connections = {};
@@ -28,6 +29,7 @@ export default function VideoMeetComponent() {
     const [askForUsername, setAskForUsername] = useState(true);
     const [username, setUsername] = useState("");
     const [videos, setVideos] = useState([]);
+    const [showLimitModal, setShowLimitModal] = useState(false);
 
     useEffect(() => {
         getPermissions();
@@ -344,48 +346,48 @@ export default function VideoMeetComponent() {
 
             socketRef.current.on('user-joined', (id, clients) => {
                 console.log('User joined event:', id, 'Clients:', clients);
-                
+
+                // Limit to 6 participants (including self)
+                if (clients.length > 6) {
+                    if (id === socketIdRef.current) {
+                        setShowLimitModal(true);
+                    }
+                    return;
+                }
+
+                // ...existing code for processedJoinEvents and connections...
                 // Create a unique key for this join event to prevent duplicates
                 const eventKey = `${id}-${clients.length}-${Date.now()}`;
-                
                 // Prevent processing the same join event multiple times
                 if (processedJoinEvents.has(eventKey)) {
                     console.log('Join event already processed, skipping');
                     return;
                 }
                 processedJoinEvents.add(eventKey);
-                
                 // Clean up old processed events (keep only last 10)
                 if (processedJoinEvents.size > 10) {
                     const oldestKey = processedJoinEvents.values().next().value;
                     processedJoinEvents.delete(oldestKey);
                 }
-                
                 // Create connections for all clients except self
                 clients.forEach((socketListId) => {
                     // Skip self
                     if (socketListId === socketIdRef.current) return;
-                    
                     // Only create new connection if it doesn't exist
                     if (!connections[socketListId]) {
                         console.log('Creating new connection for:', socketListId);
                         connections[socketListId] = new RTCPeerConnection(peerConfigConnections);
-                        
                         connections[socketListId].onicecandidate = function (event) {
                             if (event.candidate != null) {
                                 socketRef.current.emit('signal', socketListId, JSON.stringify({ 'ice': event.candidate }));
                             }
                         };
-
                         connections[socketListId].ontrack = (event) => {
                             console.log('Received track from:', socketListId, 'Stream ID:', event.streams[0].id);
-                            
                             setVideos(prevVideos => {
                                 console.log('Current videos before update:', prevVideos.map(v => v.socketId));
-                                
                                 // Ensure no duplicate entries for the same socketId
                                 const filteredVideos = prevVideos.filter(video => video.socketId !== socketListId);
-                                
                                 console.log('Adding new video for:', socketListId);
                                 // Always add as new video after filtering duplicates
                                 const newVideo = {
@@ -400,7 +402,6 @@ export default function VideoMeetComponent() {
                                 return updatedVideos;
                             });
                         };
-
                         // Add tracks to new connection
                         if (window.localStream !== undefined && window.localStream !== null) {
                             addTracksToConnection(connections[socketListId], window.localStream);
@@ -413,13 +414,11 @@ export default function VideoMeetComponent() {
                         console.log('Connection already exists for:', socketListId);
                     }
                 });
-
                 // Only create offers if this is MY join event
                 if (id === socketIdRef.current) {
                     console.log('This is my join event, creating offers for existing connections');
                     for (let id2 in connections) {
                         if (id2 === socketIdRef.current) continue;
-
                         connections[id2].createOffer().then((description) => {
                             connections[id2].setLocalDescription(description)
                                 .then(() => {
@@ -453,6 +452,7 @@ export default function VideoMeetComponent() {
     };
 
     // Event handlers
+    // Revert: just toggle state, let useEffect trigger getUserMedia
     const handleVideo = () => setVideo(!video);
     const handleAudio = () => setAudio(!audio);
     const handleScreen = () => setScreen(!screen);
@@ -518,6 +518,15 @@ export default function VideoMeetComponent() {
 
     return (
         <div className=" fixed inset-0 bg-[#010430] overflow-hidden">
+            {/* Modal for participant limit */}
+            <Modal
+                show={showLimitModal}
+                onClose={() => { setShowLimitModal(false); window.location.href = '/'; }}
+                title="Room Full"
+            >
+                This meeting only supports up to <span className="font-bold text-blue-700">6 participants</span>.<br />
+                Please try again later or create a new meeting.
+            </Modal>
             {askForUsername ? (
                 <div className="flex flex-col items-center justify-center rounded-lg shadow-lg p-8 space-y-6 max-w-md mx-auto mt-50 mb-16 border-4 border-solid border-blue-500 bg-white"> 
                     <h2 className="text-2xl font-bold text-gray-800 mb-2">Enter into Lobby</h2>
@@ -619,10 +628,28 @@ export default function VideoMeetComponent() {
                         playsInline
                     />
 
-                    {/* Conference Videos */}
-                    <div className="flex flex-wrap gap-2 p-2 absolute top-0 left-0 w-full h-[80vh] items-center justify-center ">
+                    {/* Conference Videos - Responsive Grid for up to 6 users */}
+                    <div
+                        className={`grid gap-4 p-4 absolute top-0 left-0 w-full h-[80vh] overflow-y-auto items-center justify-center transition-all duration-300
+                            ${videos.length === 1 ? 'grid-cols-1' : ''}
+                            ${videos.length === 2 ? 'grid-cols-2' : ''}
+                            ${videos.length === 3 ? 'grid-cols-2 md:grid-cols-3' : ''}
+                            ${videos.length === 4 ? 'grid-cols-2 md:grid-cols-2 lg:grid-cols-4' : ''}
+                            ${videos.length === 5 ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-5' : ''}
+                            ${videos.length === 6 ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6' : ''}
+                        `}
+                        style={{
+                            gridAutoRows: 'minmax(160px, 1fr)',
+                            minHeight: '160px',
+                            maxHeight: '80vh',
+                        }}
+                    >
                         {videos.map((video) => (
-                            <div key={`${video.socketId}-${video.stream?.id || 'no-stream'}`} className="rounded-xl shadow-2xl border-2 border-gray-600/30 overflow-hidden backdrop-blur-sm transition-all duration-300 hover:border-blue-500/50 hover:shadow-blue-500/20">        
+                            <div
+                                key={`${video.socketId}-${video.stream?.id || 'no-stream'}`}
+                                className="relative rounded-xl shadow-2xl border-2 border-blue-500/30 overflow-hidden backdrop-blur-sm transition-all duration-300 hover:border-blue-500/70 hover:shadow-blue-500/30 bg-black flex items-center justify-center"
+                                style={{ aspectRatio: '16/9', minHeight: '160px', maxHeight: '32vh' }}
+                            >
                                 <video
                                     data-socket={video.socketId}
                                     ref={ref => {
@@ -632,8 +659,8 @@ export default function VideoMeetComponent() {
                                     }}
                                     autoPlay
                                     playsInline
-                                    className="rounded-lg min-w-[30vw] w-[40vw] h-[20vh]"
-                                    style={{ minWidth: '60vw', width: '50vw', height: '45vh' }}
+                                    className="rounded-lg w-full h-full object-cover bg-black"
+                                    style={{ aspectRatio: '16/9', minHeight: '160px', maxHeight: '32vh' }}
                                 />
                             </div>
                         ))}
