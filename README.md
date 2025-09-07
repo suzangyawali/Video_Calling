@@ -1,4 +1,3 @@
-
 <div align="center">
   <img src="./screenshot/Logo.png" alt="HelioMeet Logo" width="120" />
 </div>
@@ -24,6 +23,7 @@ HelioMeet uses WebRTC mesh architecture optimized for small groups of up to 6 pa
 ---
 
 ## Table of Contents
+- [System Architecture](#system-architecture)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Screenshots](#screenshots)
@@ -32,7 +32,20 @@ HelioMeet uses WebRTC mesh architecture optimized for small groups of up to 6 pa
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contribution Guide](#contribution-guide)
+- [License](#license)
+- [Contact](#contact)
+- [Acknowledgments](#acknowledgments)
 
+
+---
+
+## System Architecture
+![System Architecture](./screenshot/System%20Architecture.jpeg)
+HelioMeet's architecture consists of a React frontend communicating with a Node.js/Express backend. WebRTC is used for peer-to-peer video communication, while Socket.io handles real-time events like chat and participant updates.
+
+- **Frontend**: React app (Vite) for the user interface, using WebRTC for video.
+- **Backend**: Node.js + Express server, with MongoDB for data storage.
+- **Real-Time**: Socket.io for WebSocket communication.
 
 ---
 
