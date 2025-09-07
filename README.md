@@ -36,25 +36,6 @@ HelioMeet uses WebRTC mesh architecture optimized for small groups of up to 6 pa
 
 ---
 
-## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-## Contact
-- Email: sujangyawali177@example.com
-- GitHub: [suzangyawali](https://github.com/suzangyawali)
-
----
-
-## Acknowledgments
-- Inspired by Zoom's functionality
-- Built with Node.js, Express, MongoDB, React, and Socket.io
-- Thanks to the open-source community for tools and libraries
-
----
-
-
 ## Features
 - 🔐 User authentication with JWT
 - 📹 High-quality video conferencing (up to 6 participants)
